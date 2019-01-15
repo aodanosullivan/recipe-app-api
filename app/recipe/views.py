@@ -28,7 +28,9 @@ class TagViewSet(viewsets.GenericViewSet,
         serializer.save(user=self.request.user)
 
 
-class IngredientViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class IngredientViewSet(viewsets.GenericViewSet,
+                        mixins.ListModelMixin,
+                        mixins.CreateModelMixin):
     """Manage Ingredients in the Database"""
 
     authentication_classes = (TokenAuthentication,)
@@ -42,3 +44,7 @@ class IngredientViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         """Return Objects for the current authenticated user only"""
 
         return self.queryset.filter(user=self.request.user).order_by('-name')
+
+    def perform_create(self, serializer):
+        """Create a new Ingredient"""
+        serializer.save(user=self.request.user)
